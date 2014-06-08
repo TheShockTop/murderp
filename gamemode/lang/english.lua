@@ -12,7 +12,7 @@ pt.teamSpectators = "Spectators"
 pt.teamPlayers = "Players"
 pt.teamAss = "Cake"
 
-pt.killedTeamKill = "{player} killed an innocent bystander"
+pt.killedTeamKill = "{player} killed {victim}, an innocent bystander"
 pt.killedMurderer = "{player} killed the murderer"
 
 pt.murdererDeathUnknown = "The murderer died in mysterious circumstances"

@@ -296,8 +296,10 @@ function GM:PlayerDeath(ply, Inflictor, attacker )
 			elseif attacker != ply then
 				if self.ShowBystanderTKs:GetBool() then
 					local col = attacker:GetPlayerColor()
+					local colv = ply:GetPlayerColor()
 					local msgs = Translator:AdvVarTranslate(translate.killedTeamKill, {
-						player = {text = attacker:Nick() .. ", " .. attacker:GetBystanderName(), color = Color(col.x * 255, col.y * 255, col.z * 255)}
+						player = {text = attacker:Nick() .. ", " .. attacker:GetBystanderName(), color = Color(col.x * 255, col.y * 255, col.z * 255)},
+						victim = {text = ply:Nick() .. ", " .. ply:GetBystanderName(), color = Color(colv.x * 255, colv.y * 255, colv.z * 255)}
 					})
 					local ct = ChatText()
 					ct:AddParts(msgs)
