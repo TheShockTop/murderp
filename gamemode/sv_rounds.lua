@@ -270,6 +270,16 @@ function GM:StartNewRound()
 	for k,ply in pairs(players) do
 		ply:UnSpectate()
 	end
+	for _, ent in pairs(ents.FindByClass("prop_ragdoll")) do
+	    if IsValid(ent) then
+	        ent:SetNoDraw(true)
+	        ent:SetSolid(SOLID_NONE)
+	        ent:SetColor(Color(0,0,0,0))
+			ent:SetNWEntity("Player",self)
+			ent:SetNWString("Name", "")
+	        ent.NoTarget = true
+	    end
+	end
 	game.CleanUpMap()
 	self:InitPostEntityAndMapCleanup()
 	self:ClearAllFootsteps()
