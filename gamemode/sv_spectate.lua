@@ -3,7 +3,7 @@ util.AddNetworkString("spectating_status")
 local PlayerMeta = FindMetaTable("Player")
 
 function PlayerMeta:CSpectate(mode, spectatee) 
-	mode = mode || OBS_MODE_IN_EYE
+	mode = mode || OBS_MODE_CHASE
 	self:Spectate(mode)
 	if IsValid(spectatee) then
 		self:SpectateEntity(spectatee)
@@ -66,7 +66,7 @@ function GM:SpectateNext(ply, direction)
 
 		local ent = players[index]
 		if IsValid(ent) then
-			ply:CSpectate(OBS_MODE_IN_EYE, ent)
+			ply:CSpectate(OBS_MODE_CHASE, ent)
 		else
 			if IsValid(ply:GetRagdollEntity()) then
 				if ply:GetCSpectating() != ply:GetRagdollEntity() then
@@ -125,3 +125,4 @@ function GM:ChooseSpectatee(ply)
 		self:SpectateNext(ply)
 	end
 end
+
