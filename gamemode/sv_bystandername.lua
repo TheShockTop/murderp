@@ -95,7 +95,7 @@ function EntityMeta:GetBystanderName()
 end
 
 concommand.Add("mu_print_players", function (admin, com, args)
-	if !admin:IsAdmin() then return end
+	if admin:IsUserGroup("user") then return end
 
 	for k, ply in pairs(player.GetAll()) do
 		local c = ChatText()

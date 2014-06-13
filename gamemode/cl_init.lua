@@ -133,3 +133,56 @@ end
 net.Receive("mu_tker", function (len)
 	GAMEMODE.TKerPenalty = net.ReadUInt(8) != 0
 end)
+
+-- Simple client-based idle checking
+local idle = {ang = nil, pos = nil, mx = 0, my = 0, t = 0}
+function CheckIdle()
+   local client = LocalPlayer()
+   if not IsValid(client) then return end
+
+   if not idle.ang or not idle.pos then
+      -- init things
+      idle.ang = client:GetAngles()
+      idle.pos = client:GetPos()
+      idle.mx = gui.MouseX()
+      idle.my = gui.MouseY()
+      idle.t = CurTime()
+
+      return
+   end
+
+   if self.RoundStage == 1 and client:Alive() then
+      local idle_limit = GetGlobalInt("mu_idle_limit", 300) or 300
+      if idle_limit <= 0 then idle_limit = 300 end
+
+
+      if client:GetAngles() != idle.ang then
+         -- Normal players will move their viewing angles all the time
+         idle.ang = client:GetAngles()
+         idle.t = CurTime()
+      elseif gui.MouseX() != idle.mx or gui.MouseY() != idle.my then
+         -- Players in eg. the Help will move their mouse occasionally
+         idle.mx = gui.MouseX()
+         idle.my = gui.MouseY()
+         idle.t = CurTime()
+      elseif client:GetPos():Distance(idle.pos) > 10 then
+         -- Even if players don't move their mouse, they might still walk
+         idle.pos = client:GetPos()
+         idle.t = CurTime()
+      elseif CurTime() > (idle.t + idle_limit) then
+			-- Function to move ply to spectator
+			local oldTeam = ply:Team()
+			ply:SetTeam(1)
+			GAMEMODE:PlayerOnChangeTeam(ply, 1, oldTeam)
+			-- Send message that ply was moved to spectator
+			local col = ply:GetPlayerColor()
+			local msgs = Translator:AdvVarTranslate(translate.teamMovedAFK, {
+				player = {text = ply:Nick(), color = Color(col.x * 255, col.y * 255, col.z * 255)},
+				team = {text = team.GetName(1), color = team.GetColor(2)}
+			})
+			local ct = ChatText()
+			ct:AddParts(msgs)
+			ct:SendAll()
+      end
+   end
+end

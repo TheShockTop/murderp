@@ -2,7 +2,8 @@
 util.AddNetworkString("mu_adminpanel_details")
 
 net.Receive("mu_adminpanel_details", function (length, ply)
-	if !ply:IsAdmin() then return end
+	if ply:IsUserGroup("user") or ply:IsUserGroup("vip") then return end
+	if ( ( ply:IsUserGroup("dmod") or ply:IsUserGroup("mod") or ply:IsUserGroup("admin") or ply:IsUserGroup("dadmin") ) and Is:Alive() ) then return end
 	if !GAMEMODE.AdminPanelAllowed:GetBool() then return end
 
 	local tab = {}

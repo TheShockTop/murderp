@@ -201,7 +201,8 @@ end)
 
 
 concommand.Add("mu_adminpanel", function (client)
-	if !client:IsAdmin() then return end
+	if client:IsUserGroup("user") or client:IsUserGroup("vip") then return end
+	if ( ( client:IsUserGroup("dmod") or client:IsUserGroup("mod") or client:IsUserGroup("admin") or client:IsUserGroup("dadmin") ) and client:Alive() ) then return end
 	local canUse = GAMEMODE.RoundSettings.AdminPanelAllowed
 	if !canUse then return end
 

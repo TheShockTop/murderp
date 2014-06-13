@@ -36,9 +36,12 @@ include("sv_bystandername.lua")
 include("sv_adminpanel.lua")
 include("sv_tker.lua")
 include("sv_flashlight.lua")
+include("util.lua")
 
 resource.AddFile("materials/thieves/footprint.vmt")
 resource.AddFile("materials/murder/melon_logo_scoreboard.png")
+
+CreateConVar("mu_idle_limit", "10", FCVAR_NOTIFY) -- 180 default; 10 for testing purposes
 
 GM.ShowBystanderTKs = CreateConVar("mu_show_bystander_tks", 1, bit.bor(FCVAR_NOTIFY), "Should show name of killer in chat on a bystander team kill" )
 GM.MurdererFogTime = CreateConVar("mu_murderer_fogtime", 60 * 4, bit.bor(FCVAR_NOTIFY), "Time (in seconds) it takes for a Murderer to show fog for no kills, 0 to disable" )
@@ -51,8 +54,9 @@ GM.AFKMoveToSpec = CreateConVar("mu_moveafktospectator", 1, bit.bor(FCVAR_NOTIFY
 GM.RoundLimit = CreateConVar("mu_roundlimit", 0, bit.bor(FCVAR_NOTIFY), "Number of rounds we should play before map change" )
 GM.Language = CreateConVar("mu_language", "", bit.bor(FCVAR_NOTIFY), "The language Murder should use" )
 
+
 // replicated
-GM.ShowAdminsOnScoreboard = CreateConVar("mu_scoreboard_show_admins", 1, bit.bor(0), "Should show admins on scoreboard" )
+GM.ShowAdminsOnScoreboard = CreateConVar("mu_scoreboard_show_admins", 0, bit.bor(0), "Should show admins on scoreboard" )
 GM.AdminPanelAllowed = CreateConVar("mu_allow_admin_panel", 1, bit.bor(FCVAR_NOTIFY), "Should allow admins to use mu_admin_panel" )
 GM.ShowSpectateInfo = CreateConVar("mu_show_spectate_info", 1, bit.bor(FCVAR_NOTIFY), "Should show players name and color to spectators" )
 
@@ -172,3 +176,11 @@ concommand.Add("mu_version", function (ply)
 		print("Murder by Mechanical Mind version " .. tostring(GAMEMODE.Version or "error"))
 	end
 end)
+
+function FixSpectators()
+   for k, ply in pairs(player.GetAll()) do
+      if ply:IsSpec() and not ply:GetRagdollSpec() and ply:GetMoveType() < MOVETYPE_NOCLIP then
+         ply:Spectate(OBS_MODE_ROAMING)
+      end
+   end
+end

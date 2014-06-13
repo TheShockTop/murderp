@@ -70,8 +70,6 @@ function GM:DoScoreboardActionPopup(ply)
 	local actions = DermaMenu()
 
 	if ply:IsAdmin() then
-		local admin = actions:AddOption(translate.scoreboardActionAdmin)
-		admin:SetIcon("icon16/shield.png")
 	end
 
 	if ply != LocalPlayer() then
@@ -88,7 +86,7 @@ function GM:DoScoreboardActionPopup(ply)
 		end
 	end
 	
-	if IsValid(LocalPlayer()) && LocalPlayer():IsAdmin() then
+	if IsValid(LocalPlayer()) && LocalPlayer():IsSuperAdmin() then
 		actions:AddSpacer()
 
 		if ply:Team() == 2 then

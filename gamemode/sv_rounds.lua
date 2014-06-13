@@ -212,21 +212,21 @@ function GM:EndTheRound(reason, murderer)
 
 	net.Broadcast()
 
-	for k, ply in pairs(players) do
-		if !ply.HasMoved && !ply.Frozen && self.AFKMoveToSpec:GetBool() then
-			local oldTeam = ply:Team()
-			ply:SetTeam(1)
-			GAMEMODE:PlayerOnChangeTeam(ply, 1, oldTeam)
-
-			local col = ply:GetPlayerColor()
-			local msgs = Translator:AdvVarTranslate(translate.teamMovedAFK, {
-				player = {text = ply:Nick(), color = Color(col.x * 255, col.y * 255, col.z * 255)},
-				team = {text = team.GetName(1), color = team.GetColor(2)}
-			})
-			local ct = ChatText()
-			ct:AddParts(msgs)
-			ct:SendAll()
-		end
+--	for k, ply in pairs(players) do
+--		if !ply.HasMoved && !ply.Frozen && self.AFKMoveToSpec:GetBool() then
+--			local oldTeam = ply:Team()
+--			ply:SetTeam(1)
+--			GAMEMODE:PlayerOnChangeTeam(ply, 1, oldTeam)
+--
+--			local col = ply:GetPlayerColor()
+--			local msgs = Translator:AdvVarTranslate(translate.teamMovedAFK, {
+--				player = {text = ply:Nick(), color = Color(col.x * 255, col.y * 255, col.z * 255)},
+--				team = {text = team.GetName(1), color = team.GetColor(2)}
+--			})
+--			local ct = ChatText()
+--			ct:AddParts(msgs)
+--			ct:SendAll()
+--		end
 		if ply:Alive() then
 			ply:Freeze(false)
 			ply.Frozen = false
