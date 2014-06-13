@@ -642,33 +642,6 @@ function GM:Tick()
          else
             ply.drowning = nil
          end
-
-         -- Slow down ironsighters
---         local wep = ply:GetActiveWeapon()
---         if IsValid(wep) and wep.GetIronsights and wep:GetIronsights() then
---            ply:SetSpeed(true)
----        else
----           ply:SetSpeed(false)
---         end
-
-         -- Run DNA Scanner think also when it is not deployed
---         if IsValid(ply.scanner_weapon) and wep != ply.scanner_weapon then
---            ply.scanner_weapon:Think()
---         end
---      elseif tm == TEAM_SPEC then
---         if ply.propspec then
---            PROPSPEC.Recharge(ply)
-
---            if IsValid(ply:GetObserverTarget()) then
---               ply:SetPos(ply:GetObserverTarget():GetPos())
---            end
---         end
-
-         -- if spectators are alive, ie. they picked spectator mode, then
-         -- DeathThink doesn't run, so we have to SpecThink here
---         if ply:Alive() then
---            self:SpectatorThink(ply)
---         end
       end
    end
 end
