@@ -22,7 +22,8 @@ GM.HaloRender = CreateClientConVar( "mu_halo_render", 1, true, true ) // should 
 GM.HaloRenderLoot = CreateClientConVar( "mu_halo_loot", 1, true, true ) // shouuld we render loot halos
 GM.HaloRenderKnife = CreateClientConVar( "mu_halo_knife", 1, true, true ) // shouuld we render murderer's knife halos
 
-function GM:Initialize() 
+function GM:Initialize()
+	MsgN("Murder Client Initializing...") -- Fuck it, adding debug because it's pissing me off
 	self:FootStepsInit()
 end
 
