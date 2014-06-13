@@ -182,38 +182,7 @@ end)
 -- Simple client-based idle checking
 function CheckIdle()
 	for _, ply in pairs(player.GetAll()) do
---	local idle = {ang = nil, pos = nil, mx = 0, my = 0, t = 0}
---	if not IsValid(ply) then return end
-
---	if not idle.ang or not idle.pos then
-      -- init things
---      idle.ang = ply:GetAngles()
---      idle.pos = ply:GetPos()
-----      idle.mx = gui.MouseX()
-----      idle.my = gui.MouseY()
---      idle.t = CurTime()
---
---	  return
---	end
---
 	if GAMEMODE.RoundStage == 1 and ply:Alive() then
---		local idle_limit = GetGlobalInt("ttt_idle_limit", 10) or 10 -- Change 10 back to 300 or specified CurTime
---		if idle_limit <= 0 then idle_limit = 10 end -- networking sucks sometimes
-
---		if ply:GetAngles() != idle.ang then
-         -- Normal players will move their viewing angles all the time
---			idle.ang = ply:GetAngles()
---			idle.t = CurTime()
-----		elseif gui.MouseX() != idle.mx or gui.MouseY() != idle.my then
---        -- Players in eg. the Help will move their mouse occasionally
-----			idle.mx = gui.MouseX()
-----			idle.my = gui.MouseY()
-----			idle.t = CurTime()
---		elseif ply:GetPos():Distance(idle.pos) > 10 then
---         -- Even if players don't move their mouse, they might still walk
---			idle.pos = ply:GetPos()
---			idle.t = CurTime()
---		if CurTime() > (CurTime() + (idle_limit / 2)) and ply.HasMoved == false then
 		if CurTime() > 300 and !ply.HasMoved and !ply.Frozen then -- After five munutes it moves afk to spectator
 			local oldTeam = ply:Team()
 			ply:SetTeam(1)
