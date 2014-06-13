@@ -32,15 +32,15 @@ usermessage.Hook("rp_death",function (um)
 	GAMEMODE.SpectateTime = CurTime() + um:ReadLong()
 end)
 
---function GM:RenderRespawnText()
---	local client = LocalPlayer()
---	local sw,sh = ScrW(),ScrH()
---	
---	local t = math.max(math.ceil(GAMEMODE.SpectateTime - CurTime()), 0)
---	
---	if t <= 0 then
---		self:RenderSpectate()
---	else
---		draw.DrawText(tostring(t), "MersDeathBig",sw / 2,sh  * 0.25,color_white,1)
---	end
---end
+function GM:RenderRespawnText()
+	local client = LocalPlayer()
+	local sw,sh = ScrW(),ScrH()
+	
+	local t = math.max(math.ceil(GAMEMODE.SpectateTime - CurTime()), 0)
+	
+	if t <= 0 then
+		self:RenderSpectate()
+	else
+		draw.DrawText(tostring(t), "MersDeathBig",sw / 2,sh  * 0.25,color_white,1)
+	end
+end

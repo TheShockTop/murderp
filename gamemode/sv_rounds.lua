@@ -212,21 +212,21 @@ function GM:EndTheRound(reason, murderer)
 
 	net.Broadcast()
 
---	for k, ply in pairs(players) do
---		if !ply.HasMoved && !ply.Frozen && self.AFKMoveToSpec:GetBool() then
---			local oldTeam = ply:Team()
---			ply:SetTeam(1)
---			GAMEMODE:PlayerOnChangeTeam(ply, 1, oldTeam)
---
---			local col = ply:GetPlayerColor()
---			local msgs = Translator:AdvVarTranslate(translate.teamMovedAFK, {
---				player = {text = ply:Nick(), color = Color(col.x * 255, col.y * 255, col.z * 255)},
---				team = {text = team.GetName(1), color = team.GetColor(2)}
---			})
---			local ct = ChatText()
---			ct:AddParts(msgs)
---			ct:SendAll()
---		end
+	for k, ply in pairs(players) do
+		if !ply.HasMoved && !ply.Frozen && self.AFKMoveToSpec:GetBool() then
+			local oldTeam = ply:Team()
+			ply:SetTeam(1)
+			GAMEMODE:PlayerOnChangeTeam(ply, 1, oldTeam)
+
+			local col = ply:GetPlayerColor()
+			local msgs = Translator:AdvVarTranslate(translate.teamMovedAFK, {
+				player = {text = ply:Nick(), color = Color(col.x * 255, col.y * 255, col.z * 255)},
+				team = {text = team.GetName(1), color = team.GetColor(2)}
+			})
+			local ct = ChatText()
+			ct:AddParts(msgs)
+			ct:SendAll()
+		end
 		if ply:Alive() then
 			ply:Freeze(false)
 			ply.Frozen = false
@@ -269,16 +269,6 @@ function GM:StartNewRound()
 	local players = team.GetPlayers(2)
 	for k,ply in pairs(players) do
 		ply:UnSpectate()
-	end
-	for _, ent in pairs(ents.FindByClass("prop_ragdoll")) do
-	    if IsValid(ent) then
-	        ent:SetNoDraw(true)
-	        ent:SetSolid(SOLID_NONE)
-	        ent:SetColor(Color(0,0,0,0))
-			ent:SetNWEntity("Player",self)
-			ent:SetNWString("Name", "")
-	        ent.NoTarget = true
-	    end
 	end
 	game.CleanUpMap()
 	self:InitPostEntityAndMapCleanup()

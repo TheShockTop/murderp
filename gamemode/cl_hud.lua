@@ -64,10 +64,10 @@ function GM:HUDPaint()
 		drawTextShadow(translate.minimumPlayers, "MersRadial", ScrW() / 2, ScrH() - 10, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	end
 
---	if client:Team() == 2 then
---		if !client:Alive() then
---			self:RenderRespawnText()
---		else
+	if client:Team() == 2 then
+		if !client:Alive() then
+			self:RenderRespawnText()
+		else
 
 			if round == 1 then
 				if self.RoundStart && self.RoundStart + 10 > CurTime() then
