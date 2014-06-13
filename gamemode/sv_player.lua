@@ -603,3 +603,72 @@ end
 function PlayerMeta:GetMurdererDisguised()
 	return self.Disguised and true or false
 end
+
+-- Drowning and such
+local tm = nil
+local ply = nil
+local plys = nil
+function GM:Tick()
+   -- three cheers for micro-optimizations
+   plys = player.GetAll()
+   for i= 1, #plys do
+      ply = plys[i]
+      tm = ply:Team()
+      if ply:Alive() then
+         -- Drowning
+         if ply:WaterLevel() == 3 then
+            if ply:IsOnFire() then
+               ply:Extinguish()
+            end
+
+            if ply.drowning then
+               if ply.drowning < CurTime() then
+                  local dmginfo = DamageInfo()
+                  dmginfo:SetDamage(15)
+                  dmginfo:SetDamageType(DMG_DROWN)
+                  dmginfo:SetAttacker(game.GetWorld())
+                  dmginfo:SetInflictor(game.GetWorld())
+                  dmginfo:SetDamageForce(Vector(0,0,1))
+
+                  ply:TakeDamageInfo(dmginfo)
+
+                  -- have started drowning properly
+                  ply.drowning = CurTime() + 1
+               end
+            else
+               -- will start drowning soon
+               ply.drowning = CurTime() + 8
+            end
+         else
+            ply.drowning = nil
+         end
+
+         -- Slow down ironsighters
+--         local wep = ply:GetActiveWeapon()
+--         if IsValid(wep) and wep.GetIronsights and wep:GetIronsights() then
+--            ply:SetSpeed(true)
+---        else
+---           ply:SetSpeed(false)
+--         end
+
+         -- Run DNA Scanner think also when it is not deployed
+--         if IsValid(ply.scanner_weapon) and wep != ply.scanner_weapon then
+--            ply.scanner_weapon:Think()
+--         end
+--      elseif tm == TEAM_SPEC then
+--         if ply.propspec then
+--            PROPSPEC.Recharge(ply)
+
+--            if IsValid(ply:GetObserverTarget()) then
+--               ply:SetPos(ply:GetObserverTarget():GetPos())
+--            end
+--         end
+
+         -- if spectators are alive, ie. they picked spectator mode, then
+         -- DeathThink doesn't run, so we have to SpecThink here
+--         if ply:Alive() then
+--            self:SpectatorThink(ply)
+--         end
+      end
+   end
+end
