@@ -11,3 +11,4 @@ function GM:SetupTeams()
 	team.SetUp(2, translate.teamPlayers, Color(26, 120, 245))
 end
 GM:SetupTeams()
+

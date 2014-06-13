@@ -27,6 +27,14 @@ function GM:Initialize()
 	self:FootStepsInit()
 end
 
+function GM:InitPostEntity()
+   MsgN("Murder Client post-init...")
+
+   if not game.SinglePlayer() then
+      timer.Create("idlecheck", 5, 0, CheckIdle)
+   end
+end
+
 GM.FogEmitters = {}
 if GAMEMODE then GM.FogEmitters = GAMEMODE.FogEmitters end
 function GM:Think()
@@ -134,3 +142,47 @@ end
 net.Receive("mu_tker", function (len)
 	GAMEMODE.TKerPenalty = net.ReadUInt(8) != 0
 end)
+
+-- Simple client-based idle checking
+local idle = {ang = nil, pos = nil, mx = 0, my = 0, t = 0}
+function CheckIdle()
+--   MsgN("Ping!") --debug
+   local client = LocalPlayer()
+   if not IsValid(client) then return end
+
+   if not idle.ang or not idle.pos then
+      -- init things
+      idle.ang = client:GetAngles()
+      idle.pos = client:GetPos()
+      idle.mx = gui.MouseX()
+      idle.my = gui.MouseY()
+      idle.t = CurTime()
+
+      return
+   end
+
+   if GAMEMODE.RoundStage == 1 and client:Alive() then
+      local idle_limit = GetGlobalInt("ttt_idle_limit", 300) or 300
+      if idle_limit <= 0 then idle_limit = 300 end -- networking sucks sometimes
+
+      if client:GetAngles() != idle.ang then
+         -- Normal players will move their viewing angles all the time
+         idle.ang = client:GetAngles()
+         idle.t = CurTime()
+      elseif gui.MouseX() != idle.mx or gui.MouseY() != idle.my then
+         -- Players in eg. the Help will move their mouse occasionally
+         idle.mx = gui.MouseX()
+         idle.my = gui.MouseY()
+         idle.t = CurTime()
+      elseif client:GetPos():Distance(idle.pos) > 10 then
+         -- Even if players don't move their mouse, they might still walk
+         idle.pos = client:GetPos()
+         idle.t = CurTime()
+      elseif CurTime() > (idle.t + idle_limit) then
+		RunConsoleCommand("mu_afk")
+      elseif CurTime() > (idle.t + (idle_limit / 2)) then
+         -- will repeat
+         client:PrintMessage( HUD_PRINTTALK, "If you delay any further, you will be moved to spectator.")
+	end
+	end
+end

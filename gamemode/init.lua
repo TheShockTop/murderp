@@ -37,7 +37,7 @@ include("sv_adminpanel.lua")
 include("sv_tker.lua")
 include("sv_flashlight.lua")
 
-CreateConVar("ttt_idle_limit", "10", FCVAR_NOTIFY)
+CreateConVar("ttt_idle_limit", "300", FCVAR_NOTIFY)
 
 resource.AddFile("materials/thieves/footprint.vmt")
 resource.AddFile("materials/murder/melon_logo_scoreboard.png")
@@ -75,9 +75,9 @@ function GM:InitPostEntity()
 			self:AddLootItem(ent)
 		end
 	end
-   if not game.SinglePlayer() then
-      timer.Create("idlecheck", 5, 0, CheckIdle)
-   end
+--   if not game.SinglePlayer() then
+--      timer.Create("idlecheck", 5, 0, CheckIdle)
+--   end
 	self:InitPostEntityAndMapCleanup()
 end
 
@@ -179,14 +179,10 @@ concommand.Add("mu_version", function (ply)
 	end
 end)
 
--- Simple client-based idle checking
-function CheckIdle()
-	for _, ply in pairs(player.GetAll()) do
-	if GAMEMODE.RoundStage == 1 and ply:Alive() then
-		if CurTime() > 300 and !ply.HasMoved and !ply.Frozen then -- After five munutes it moves afk to spectator
-			local oldTeam = ply:Team()
-			ply:SetTeam(1)
-			GAMEMODE:PlayerOnChangeTeam(ply, 1, oldTeam)
+function afklol(ply)
+		local oldTeam = ply:Team()
+		ply:SetTeam(1)
+		ply:KillSilent()
 			local col = ply:GetPlayerColor()
 			local msgs = Translator:AdvVarTranslate(translate.teamMovedAFK, {
 				player = {text = ply:Nick(), color = Color(col.x * 255, col.y * 255, col.z * 255)},
@@ -195,7 +191,38 @@ function CheckIdle()
 			local ct = ChatText()
 			ct:AddParts(msgs)
 			ct:SendAll()
-		end
-	end
 end
-end
+concommand.Add("mu_afk", afklol)
+
+-- Simple client-based idle checking
+--function CheckIdle()
+--	for _, ply in pairs(player.GetAll()) do
+--	if GAMEMODE.RoundStage == 1 and ply:Alive() then end
+--	if not IsValid(ply) then return end
+--		
+--	if not idle.ang or not idle.pos then
+--		-- init things
+--		idle.ang = ply:GetAngles()
+--		idle.pos = ply:GetPos()
+--		idle.t = CurTime()
+--		return
+--	end
+--	if ply:GetPos():Distance(idle.pos) > 10 then
+--		-- Even if players don't move their mouse, they might still walk
+--		idle.pos = ply:GetPos()
+--		idle.t = CurTime()
+--	elseif CurTime() > ( idle.t + 60 ) and !ply.Frozen then -- After five munutes it moves afk to spectator
+--		local oldTeam = ply:Team()
+--		ply:SetTeam(1)
+--		GAMEMODE:PlayerOnChangeTeam(ply, 1, oldTeam)
+--		local col = ply:GetPlayerColor()
+--		local msgs = Translator:AdvVarTranslate(translate.teamMovedAFK, {
+--			player = {text = ply:Nick(), color = Color(col.x * 255, col.y * 255, col.z * 255)},
+--			team = {text = team.GetName(1), color = team.GetColor(2)}
+--		})
+--		local ct = ChatText()
+--		ct:AddParts(msgs)
+--		ct:SendAll()
+--	end
+--end
+--end
